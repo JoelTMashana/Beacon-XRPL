@@ -1,4 +1,6 @@
+const bcrypt = require('bcryptjs');
 const sqlite3 = require('sqlite3').verbose();
+
 
 // Connect to the SQLite database
 const db = new sqlite3.Database('./mydb.sqlite', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
@@ -102,12 +104,26 @@ const db = new sqlite3.Database('./mydb.sqlite', sqlite3.OPEN_READWRITE | sqlite
             )
         `);
 
-        // Insert sample data into Users
-        // Insert into Users
-db.run("INSERT INTO Users (username, email, password_hash, karma_score, wallet_id, services_enabled) VALUES (?, ?, ?, ?, ?, ?)",
-['alice', 'alice@example.com', 'hashedpasswordalice', 50, 'wallet001alice', 1]);
-db.run("INSERT INTO Users (username, email, password_hash, karma_score, wallet_id, services_enabled) VALUES (?, ?, ?, ?, ?, ?)",
-['bob', 'bob@example.com', 'hashedpasswordbob', 75, 'wallet002bob', 1]);
+        // Sample users
+        const users = [
+            { username: 'alice', email: 'alice@example.com', password: 'password123', karma_score: 100, wallet_id: 'wallet001alice', services_enabled: 1 },
+            { username: 'bob', email: 'bob@example.com', password: 'password456', karma_score: 75, wallet_id: 'wallet002bob', services_enabled: 1 }
+        ];
+    
+        users.forEach(user => {
+            bcrypt.hash(user.password, 10, (err, hash) => {
+                if (err) {
+                    console.error('Error hashing password', err);
+                    return;
+                }
+                db.run("INSERT INTO Users (username, email, password_hash, karma_score, wallet_id, services_enabled) VALUES (?, ?, ?, ?, ?, ?)",
+                    [user.username, user.email, hash, user.karma_score, user.wallet_id, user.services_enabled], (err) => {
+                        if (err) {
+                            console.error("Error inserting user", err.message);
+                        }
+                    });
+            });
+        });
 
 // Insert into UserPins
 db.run("INSERT INTO UserPins (pinner_user_id, pinned_user_id) VALUES (?, ?)",
@@ -151,13 +167,9 @@ db.run("INSERT INTO PromotionRedemptions (promotion_id, user_id, redeemed_on) VA
 db.run("INSERT INTO PromotionRedemptions (promotion_id, user_id, redeemed_on) VALUES (?, ?, ?)",
 [2, 2, '2023-06-02 14:00:00']);
 
-
-        // More inserts can be added here for each table as needed
-
         console.log("Tables created and sample data inserted");
     });
 
-    // Close the database connection
     db.close((err) => {
         if (err) {
             console.error('Error closing database', err.message);
