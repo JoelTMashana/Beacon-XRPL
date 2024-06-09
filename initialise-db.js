@@ -57,17 +57,21 @@ const db = new sqlite3.Database('./mydb.sqlite', sqlite3.OPEN_READWRITE | sqlite
             )
         `);
 
-        // Conversations Table
         db.run(`
             CREATE TABLE IF NOT EXISTS Conversations (
                 conversation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                initiator_user_id INTEGER,
+                participant_user_id INTEGER,
                 beacon_id INTEGER,
                 start_time TIMESTAMP,
                 end_time TIMESTAMP,
                 message_count INTEGER,
+                FOREIGN KEY(initiator_user_id) REFERENCES Users(user_id),
+                FOREIGN KEY(participant_user_id) REFERENCES Users(user_id),
                 FOREIGN KEY(beacon_id) REFERENCES Beacons(beacon_id)
             )
         `);
+
 
         // Messages Table
         db.run(`
@@ -143,13 +147,12 @@ db.run("INSERT INTO Beacons (user_id, content, timestamp) VALUES (?, ?, ?)",
 db.run("INSERT INTO Beacons (user_id, content, timestamp) VALUES (?, ?, ?)",
 [2, 'Available for graphic design work.', '2023-06-02 11:00:00']);
 
-// Insert into Conversations
-db.run("INSERT INTO Conversations (beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?)",
-[1, '2023-06-01 12:00:00', '2023-06-01 12:30:00', 5]);
-db.run("INSERT INTO Conversations (beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?)",
-[2, '2023-06-02 13:00:00', '2023-06-02 13:45:00', 8]);
+db.run("INSERT INTO Conversations (initiator_user_id, participant_user_id, beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?, ?, ?)",
+[1, 2, 1, '2023-06-01 12:00:00', '2023-06-01 12:30:00', 5]);
+db.run("INSERT INTO Conversations (initiator_user_id, participant_user_id, beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?, ?, ?)",
+[2, 1, 2, '2023-06-02 13:00:00', '2023-06-02 13:45:00', 8]);
 
-// Insert into Messages
+
 db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
 [1, 1, 'Hello, are you available?', '2023-06-01 12:05:00']);
 db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
