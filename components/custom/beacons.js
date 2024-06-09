@@ -4,6 +4,8 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import Link from 'next/link';
+
 
 const Beacon = ({ beacon }) => {
   return (
@@ -14,7 +16,11 @@ const Beacon = ({ beacon }) => {
         <small>{new Date(beacon.timestamp).toLocaleString()}</small>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button type="submit">Chat</Button>
+       <Link href="/chat" passHref> 
+          <Button asChild> 
+            <button type="submit">Chat</button> 
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );
