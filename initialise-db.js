@@ -141,22 +141,32 @@ db.run("INSERT INTO Services (user_id, description, cost) VALUES (?, ?, ?)",
 db.run("INSERT INTO Services (user_id, description, cost) VALUES (?, ?, ?)",
 [2, 'Graphic Design Services', 250.75]);
 
-// Insert into Beacons
+// Insert a beacon by Alice about Freshers' Week
 db.run("INSERT INTO Beacons (user_id, content, timestamp) VALUES (?, ?, ?)",
-[1, 'Looking for freelance projects.', '2023-06-01 10:00:00']);
-db.run("INSERT INTO Beacons (user_id, content, timestamp) VALUES (?, ?, ?)",
-[2, 'Available for graphic design work.', '2023-06-02 11:00:00']);
+[1, 'Really need some advice on how to survive Freshers Week!', '2023-06-01 10:00:00']);
 
+// Assuming beacon_id for Alice's beacon is 1, initiate a conversation regarding that beacon
 db.run("INSERT INTO Conversations (initiator_user_id, participant_user_id, beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?, ?, ?)",
-[1, 2, 1, '2023-06-01 12:00:00', '2023-06-01 12:30:00', 5]);
-db.run("INSERT INTO Conversations (initiator_user_id, participant_user_id, beacon_id, start_time, end_time, message_count) VALUES (?, ?, ?, ?, ?, ?)",
-[2, 1, 2, '2023-06-02 13:00:00', '2023-06-02 13:45:00', 8]);
+[1, 2, 1, '2023-06-01 12:00:00', '2023-06-01 12:30:00', 8]);
 
+// Insert messages into the conversation
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 1, 'Really need some advice on how to survive Freshers Week!', '2023-06-01 12:01:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 2, 'Keep it simple. Make sure you go to the introductory sessions, meet new people, and join a few societies that interest you.', '2023-06-01 12:02:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 1, 'That makes sense. What about managing the workload?', '2023-06-01 12:03:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 2, 'Don’t stress too much yet. Focus on getting organised, keep track of your schedule, and don’t be afraid to ask for help if you need it.', '2023-06-01 12:04:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 1, 'Thanks! Any tips on balancing social life and studies?', '2023-06-01 12:05:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 2, 'Yes, prioritise your time. Enjoy the social events but also set aside study time. Find a good balance early on.', '2023-06-01 12:06:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 1, 'Got it. Feeling more confident now. Thanks a lot!', '2023-06-01 12:07:00']);
+db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
+[1, 2, 'Anytime! Enjoy Freshers Week!', '2023-06-01 12:08:00']);
 
-db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
-[1, 1, 'Hello, are you available?', '2023-06-01 12:05:00']);
-db.run("INSERT INTO Messages (conversation_id, user_id, message_content, timestamp) VALUES (?, ?, ?, ?)",
-[1, 2, 'Yes, I am available. What do you need?', '2023-06-01 12:06:00']);
 
 // Insert into Promotions
 db.run("INSERT INTO Promotions (description, cost_in_tokens, valid_until) VALUES (?, ?, ?)",
