@@ -11,6 +11,8 @@ export default function Chat() {
   const [issueStatus, setIssueStatus] = useState('');
   const [bobWalletInfo, setBobWalletInfo] = useState(null);
   const [bobPaymentStatus, setBobPaymentStatus] = useState('');
+  const [helpfulnessScore, setHelpfulnessScore] = useState(null);
+  const [bobPaidAmount, setBobPaidAmount] = useState(null);
 
   
   const messages = [
@@ -21,6 +23,28 @@ export default function Chat() {
     { id: 5, sender: "Alice", text: "Thanks! Any tips on balancing social life and studies?" },
     { id: 6, sender: "Bob", text: "Yes, prioritise your time. Enjoy the social events but also set aside study time. Find a good balance early on." }
   ];
+
+  useEffect(() =>{
+    const fetchHelpfulnessScore = async () => {
+      try {
+          const response = await fetch('api/sentimentanalysis');
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log("API Response:", data.helpfulness);  // Log the entire response to see what we're getting
+  
+          setHelpfulnessScore(data.helpfulness);
+         
+      } catch (error) {
+          console.error('There was a problem with the fetch operation:', error);
+          setHelpfulnessScore("Failed to fetch data");
+      }
+
+      
+  };
+  fetchHelpfulnessScore();
+  }, []);
 
     const connectAndIssueToken = async () => {
       const client = new Client('wss://s.altnet.rippletest.net:51233');
@@ -170,18 +194,24 @@ export default function Chat() {
           console.error(`Failed to set trust line between hot and cold address: ${trustSetBobResult.result.meta.TransactionResult}`);
         }
 
-        // Payment from hot wallet to Bob's wallet
+        let bobPaymentAmount = 100;  
+        if (helpfulnessScore === 1) {
+          bobPaymentAmount *= 2;  
+          console.log('Helpfulness score is 1, payment amount doubled:', bobPaymentAmount);
+        }
+
         const bobPayment = {
           TransactionType: "Payment",
           Account: hotWallet.classicAddress,
           Destination: bobWallet.classicAddress,
           Amount: {
             currency: "BCN",
-            value: "100", 
+            value: bobPaymentAmount.toString(),
             issuer: hotWallet.classicAddress
           },
           DestinationTag: 123456
         };
+
 
         const preparedBobPayment = await client.autofill(bobPayment);
         const signedBobPayment = hotWallet.sign(preparedBobPayment);
@@ -194,14 +224,13 @@ export default function Chat() {
           setBobPaymentStatus('Failed to send BCN. Error: ' + bobPaymentResult.result.meta.TransactionResult);
           console.log(bobPaymentStatus);
         }
+
+       alert(`You earned ${bobPaymentAmount} BCN`);
        await client.disconnect();
       } catch (error) {
         console.error('Error:', error);
         setIssueStatus('Failed to connect or issue token. Technical details: ' + error.message);
-      } 
-
-      console.log('Bob payment status', bobPaymentStatus);
-       
+      }       
     };
 
   return (
