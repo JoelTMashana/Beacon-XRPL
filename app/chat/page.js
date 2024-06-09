@@ -1,7 +1,7 @@
 "use client"
-
 import React, { useState, useEffect } from 'react';
 import { Client, Wallet, AccountSetAsfFlags, AccountSetTfFlags } from 'xrpl';
+
 
 export default function Chat() {
   
@@ -12,8 +12,15 @@ export default function Chat() {
   const [bobWalletInfo, setBobWalletInfo] = useState(null);
   const [bobPaymentStatus, setBobPaymentStatus] = useState('');
 
-
-
+  
+  const messages = [
+    { id: 1, sender: "Alice", text: "Really need some advice on how to survive Freshers' Week!" },
+    { id: 2, sender: "Bob", text: "Keep it simple. Make sure you go to the introductory sessions, meet new people, and join a few societies that interest you." },
+    { id: 3, sender: "Alice", text: "That makes sense. What about managing the workload?" },
+    { id: 4, sender: "Bob", text: "Don’t stress too much yet. Focus on getting organised, keep track of your schedule, and don’t be afraid to ask for help if you need it." },
+    { id: 5, sender: "Alice", text: "Thanks! Any tips on balancing social life and studies?" },
+    { id: 6, sender: "Bob", text: "Yes, prioritise your time. Enjoy the social events but also set aside study time. Find a good balance early on." }
+  ];
 
     const connectAndIssueToken = async () => {
       const client = new Client('wss://s.altnet.rippletest.net:51233');
@@ -49,9 +56,9 @@ export default function Chat() {
           account: coldWallet.classicAddress,
           ledger_index: 'validated'
         });
+
         console.log('Cold wallet account info:', JSON.stringify(coldWalletInfo, null, 2));
         
-
         // Create and fund a hot wallet (recipient)
         const hotWallet = Wallet.generate();
         await client.fundWallet(hotWallet);
@@ -197,23 +204,6 @@ export default function Chat() {
        
     };
 
-
-  useEffect(() => {
-    if (bobPaymentStatus) {
-      console.log('Bob payment status:', bobPaymentStatus);
-    }
-  }, [bobPaymentStatus]);
-
-
-  const messages = [
-    { id: 1, sender: "Alice", text: "Really need some advice on how to survive Freshers' Week!" },
-    { id: 2, sender: "Bob", text: "Keep it simple. Make sure you go to the introductory sessions, meet new people, and join a few societies that interest you." },
-    { id: 3, sender: "Alice", text: "That makes sense. What about managing the workload?" },
-    { id: 4, sender: "Bob", text: "Don’t stress too much yet. Focus on getting organised, keep track of your schedule, and don’t be afraid to ask for help if you need it." },
-    { id: 5, sender: "Alice", text: "Thanks! Any tips on balancing social life and studies?" },
-    { id: 6, sender: "Bob", text: "Yes, prioritise your time. Enjoy the social events but also set aside study time. Find a good balance early on." }
-  ];
-
   return (
     <div className="p-4 max-w-md mx-auto bg-white rounded-lg border shadow-md">
       <h1 className="text-lg font-semibold text-gray-900 mb-4">Chat</h1>
@@ -224,17 +214,20 @@ export default function Chat() {
           </li>
         ))}
       </ul>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 hereeeeeeee">
         <input
           type="text"
           placeholder="Type a message..."
           className="flex-1 p-2 border rounded"
         />
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Send
+        <button 
+        style={{ backgroundColor: 'black', color: 'white' }}
+        className="hover:bg-blue-700 font-bold py-2 px-4 rounded">
+         Send
         </button>
         <button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          style={{ backgroundColor: 'black', color: 'white' }}
+          className="hover:bg-red-700 font-bold py-2 px-4 rounded"
           onClick={connectAndIssueToken}
         >
           End Chat
