@@ -233,37 +233,37 @@ export default function Chat() {
       }       
     };
 
-  return (
-    <div className="p-4 max-w-md mx-auto bg-white rounded-lg border shadow-md">
-      <h1 className="text-lg font-semibold text-gray-900 mb-4">Chat</h1>
-      <ul className="space-y-2 mb-4">
-        {messages.map(message => (
-          <li key={message.id} className="bg-gray-100 p-3 rounded-md">
-            <strong>{message.sender}:</strong> {message.text}
-          </li>
-        ))}
-      </ul>
-      <div className="flex space-x-2 hereeeeeeee">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="flex-1 p-2 border rounded"
-        />
-        <button 
-        style={{ backgroundColor: 'black', color: 'white' }}
-        className="hover:bg-blue-700 font-bold py-2 px-4 rounded">
-         Send
-        </button>
-        <button
-          style={{ backgroundColor: 'black', color: 'white' }}
-          className="hover:bg-red-700 font-bold py-2 px-4 rounded"
-          onClick={connectAndIssueToken}
-        >
-          End Chat
-        </button>
-      </div>
-    </div>
-    
-  );
+    return (
+      <div style={{ padding: '16px', maxWidth: '512px', margin: '0 auto', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e5e7eb', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+        <h1 style={{ fontSize: '18px', fontWeight: '600', color: '#1f2937', marginBottom: '16px' }}>Chat</h1>
+        <ul style={{ marginBottom: '16px' }}>
+          {messages.map(message => (
+            <li key={message.id} style={{ backgroundColor: '#f3f4f6', padding: '12px', borderRadius: '8px' }}>
+              <strong>{message.sender}:</strong> {message.text}
+            </li>
+          ))}
+        </ul>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type="text"
+            placeholder="Type a message..."
+            style={{ flexGrow: 1, padding: '8px', border: '1px solid #e5e7eb', borderRadius: '8px' }}
+          />
+          <button 
+          style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', padding: '8px 16px', borderRadius: '8px', backgroundColor: 'green' }}
+        
+          >
+           Send
+          </button>
+          <button
+            style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold', padding: '8px 16px', borderRadius: '8px', backgroundColor: 'blue' }}
+            onClick={connectAndIssueToken}
+          >
+            End Chat
+          </button>
+        </div>
+      </div> 
+    );
+  
   
 }
